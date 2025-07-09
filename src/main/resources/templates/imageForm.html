@@ -22,6 +22,12 @@
             box-shadow: 0 4px 12px rgba(0,0,0,.05);
             text-align: center;
         }
+        .form-heading {
+            margin: 0 0 1rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
         input[type="text"] {
             width: 90%;
             padding: 0.75rem 1rem;
@@ -54,6 +60,7 @@
 </head>
 <body>
     <div class="card">
+        <h2 class="form-heading">Describe Your Image</h2>
         <form th:action="@{/image/generate}" th:method="POST">
             <input type="text" name="instruction" placeholder="Describe your image" required>
             <button type="submit">Submit</button>
