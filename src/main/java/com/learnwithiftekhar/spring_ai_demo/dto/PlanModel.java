@@ -1,4 +1,4 @@
-package com.learnwithiftekhar.spring_ai_demo;
+package com.learnwithiftekhar.spring_ai_demo.dto;
 
 public class PlanModel {
     private String destination;

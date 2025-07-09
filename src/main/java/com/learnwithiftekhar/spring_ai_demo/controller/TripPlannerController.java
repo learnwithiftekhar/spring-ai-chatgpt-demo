@@ -1,5 +1,7 @@
-package com.learnwithiftekhar.spring_ai_demo;
+package com.learnwithiftekhar.spring_ai_demo.controller;
 
+import com.learnwithiftekhar.spring_ai_demo.dto.PlanModel;
+import com.learnwithiftekhar.spring_ai_demo.service.AIService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
