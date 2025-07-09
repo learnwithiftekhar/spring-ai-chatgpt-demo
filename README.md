@@ -1,12 +1,15 @@
-# Spring AI Demo - Trip Planner
+# Spring AI Demo - Trip Planner & Image Generator
 
-A simple demonstration application that shows how to integrate ChatGPT API with Spring AI framework. This application provides an AI-powered trip planning service that generates weekend trip itineraries based on user preferences.
+A comprehensive demonstration application that shows how to integrate OpenAI APIs with Spring AI framework. This application provides two main AI-powered services: trip planning and image generation, showcasing both text and image generation capabilities.
 
 ## Features
 
-- AI-powered trip planning using OpenAI's GPT-4.1 model
+- **AI-powered trip planning** using OpenAI's GPT-4.1 model
+- **AI-powered image generation** using OpenAI's DALL-E model
 - RESTful API for trip planning requests
+- Web interface for image generation with user-friendly forms
 - Customizable trip parameters (destination, date, budget, travel party size)
+- High-quality image generation (1024x1024 HD images)
 - Built with Spring Boot 3.5.3 and Spring AI 1.0.0
 
 ## Prerequisites
@@ -115,6 +118,47 @@ curl -X GET http://localhost:8080/trip-planner \
 }
 ```
 
+### Image Generation Endpoints
+
+#### Web Interface (Recommended)
+
+**Form Page:** `GET /image/generate`
+
+Access the user-friendly web interface at `http://localhost:8080/image/generate` to:
+- Enter image descriptions through an intuitive form
+- Generate high-quality 1024x1024 HD images
+- View generated images instantly
+
+**Image Generation:** `POST /image/generate`
+
+**Content-Type:** `application/x-www-form-urlencoded`
+
+**Form Parameters:**
+- `instruction` (string): Description of the image to generate
+
+**Response:** HTML page displaying the generated image
+
+#### Example Usage
+
+##### Using the Web Interface:
+1. Navigate to `http://localhost:8080/image/generate`
+2. Enter your image description (e.g., "A serene mountain landscape at sunset")
+3. Click "Submit" to generate the image
+4. View the generated image on the results page
+
+##### Using cURL:
+```bash
+curl -X POST http://localhost:8080/image/generate \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "instruction=A futuristic city skyline with flying cars"
+```
+
+##### Using Postman:
+1. Set method to `POST`
+2. URL: `http://localhost:8080/image/generate`
+3. Headers: `Content-Type: application/x-www-form-urlencoded`
+4. Body (form-data): `instruction = "A peaceful garden with cherry blossoms"`
+
 ## Configuration
 
 The application uses the following configuration in `application.properties`:
@@ -141,12 +185,19 @@ You can modify the model by changing the value in `application.properties`. Avai
 src/
 ├── main/
 │   ├── java/com/learnwithiftekhar/spring_ai_demo/
-│   │   ├── SpringAiDemoApplication.java    # Main Spring Boot application class
-│   │   ├── TripPlannerController.java      # REST controller for trip planning
-│   │   ├── AIService.java                  # Service layer for AI interactions
-│   │   └── PlanModel.java                  # Data model for trip planning requests
+│   │   ├── SpringAiDemoApplication.java           # Main Spring Boot application class
+│   │   ├── controller/
+│   │   │   ├── TripPlannerController.java         # REST controller for trip planning
+│   │   │   └── ImageController.java               # Web controller for image generation
+│   │   ├── service/
+│   │   │   └── AIService.java                     # Service layer for AI interactions
+│   │   └── dto/
+│   │       └── PlanModel.java                     # Data model for trip planning requests
 │   └── resources/
-│       └── application.properties          # Application configuration
+│       ├── application.properties                 # Application configuration
+│       └── templates/
+│           ├── imageForm.html                     # Image generation form page
+│           └── show.html                          # Image display page
 └── test/
     └── java/com/learnwithiftekhar/spring_ai_demo/
         └── SpringAiDemoApplicationTests.java
@@ -163,12 +214,21 @@ REST controller that exposes the `/trip-planner` endpoint. It:
 - Constructs AI prompts based on user input
 - Returns AI-generated trip itineraries
 
-#### 3. `AIService.java`
-Service layer that wraps the Spring AI ChatClient. It provides:
-- Simple abstraction for AI interactions
-- Chat functionality using OpenAI's API
+#### 3. `ImageController.java`
+Web controller that handles image generation functionality. It:
+- Serves the image generation form (`GET /image/generate`)
+- Processes image generation requests (`POST /image/generate`)
+- Integrates with AIService for image generation
+- Returns generated images through web templates
 
-#### 4. `PlanModel.java`
+#### 4. `AIService.java`
+Service layer that provides AI functionality through Spring AI framework. It offers:
+- **Chat functionality**: Text generation using OpenAI's ChatClient
+- **Image generation**: High-quality image creation using OpenAI's DALL-E model
+- Configurable image options (size: 1024x1024, quality: HD)
+- Simple abstraction for AI interactions
+
+#### 5. `PlanModel.java`
 Data model representing trip planning parameters:
 - `destination`: Trip destination
 - `date`: Trip start date
@@ -176,14 +236,19 @@ Data model representing trip planning parameters:
 - `numOfAdults`: Number of adults (default: 1)
 - `numOfChildren`: Number of children (default: 0)
 
+#### 6. Templates
+- **`imageForm.html`**: User-friendly form for entering image descriptions
+- **`show.html`**: Display page for generated images with responsive design
+
 ## Dependencies
 
 The project uses the following key dependencies:
 
 - **Spring Boot 3.5.3**: Core framework
 - **Spring AI 1.0.0**: AI integration framework
-- **spring-ai-starter-model-openai**: OpenAI integration starter
+- **spring-ai-starter-model-openai**: OpenAI integration starter for chat and image generation
 - **spring-boot-starter-web**: Web and REST capabilities
+- **spring-boot-starter-thymeleaf**: Template engine for web interface (implicit dependency)
 
 ## Troubleshooting
 
@@ -200,6 +265,12 @@ The project uses the following key dependencies:
 3. **Model Not Found**
    - Ensure the model specified in `application.properties` is available
    - Check OpenAI documentation for available models
+
+4. **Image Generation Issues**
+   - Verify your OpenAI account has access to DALL-E image generation
+   - Check that your API key has sufficient credits for image generation
+   - Image generation may take longer than text generation - be patient
+   - If images don't display, check browser console for network errors
 
 ### Logs
 
